@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import os
 import subprocess
 import sys
@@ -19,6 +20,9 @@ class Terminal_helper():
     def __init__(self, something, something_else):
         self.something=something
         self.something_else=something_else
+        self.path_dict={'':''}
+        self.framat_str="/home/jonny"
+        self.counter=0
     
     #FILE SECTION
 
@@ -27,20 +31,43 @@ class Terminal_helper():
 
         #Popen(["/usr/bin/git", "commit", "-m", "Fixes a bug."]) 
         #subprocess.Popen(["usr/bin/pwd"]) 
+        #,universal_newlines=True för att få string??
         subprocess.call(['pwd'], shell=True)
-        nuvarande_plats_str=subprocess.check_output(['ls','-l','-a'])
-        print(nuvarande_plats_str)
-        return nuvarande_plats_str
-    def foregaende_plats(self):
-        self.framat=subprocess.Popen(["/usr/bin/echo", "$OLDPWD"])
-        return framat 
-
-    def framat(self, framat):
-        subprocess.call(["/usr/bin/echo", "$OLDPWD"], shell=True)
-
+        nuvarande_plats_str=str(subprocess.check_output(['pwd'], shell=True))
     
+        nuvarande_plats_str=nuvarande_plats_str.strip('b\'')
+        nuvarande_plats_str=nuvarande_plats_str.strip('\\n')
+        #self.nuvarande_plats_str=str(nuvarande_plats_str)
+        print(type(nuvarande_plats_str))
+        print(nuvarande_plats_str)
+        self.path_dict={self.counter:str(nuvarande_plats_str)}
+        print(self.path_dict)
+        self.counter+=1
+        #nuvarande_plats_str=subprocess.check_output(['ls','-l','-a'])
+        #print(self.nuvarande_plats_str)
+        return nuvarande_plats_str
+
+
+    def foregaende_plats(self):
+        #self.framat=subprocess.Popen(["/usr/bin/echo", "$OLDPWD"])
+        #framat=subprocess.call(["/usr/bin/echo", "$OLDPWD"], shell=True)
+        self.framat_str=self.path_dict[self.counter]
+        print(self.framat_str)
+        return self.framat_str 
+        #should bring you to previous dir
+    def framat(self):
+        #subprocess.call(["/usr/bin/echo", " $OLDPWD"])
+        #self.framat_str=subprocess.call(["env", "|", "grep", "OLDPWD"], shell=True)
+        
+        #self.framat_str=subprocess.check_output(["/usr/bin/echo", " $OLDPWD"], universal_newlines=True)
+        print(self.framat_str)
+        subprocess.call(["cd" ,(self.framat_str)], shell=True)
+        print(self.nuvarande_plats())
+
+
+        #brings you back to startdir 
     def home(self):
-        subprocess.call(["cd"], shell=True)
+        subprocess.call(["cd","self.path_dict[0]:" ], shell=True)
         print(self.nuvarande_plats())
 
 
@@ -74,15 +101,22 @@ class Terminal_helper():
         namn=namn
         #Path(plats+ namn).touch()
         subprocess.run(["touch", (plats), (namn)])
+
+
+    def whoami(self):
+        subprocess.call(["/usr/bin/whoami"], shell=True)
+
+        
     
     def main_menu(self):
-        print("-------------------------------------------------------------------------------")
-        print("            Terminal Helper                                                  ")
-        print(" options are b=back l=list or q for quit          ")
-        print("-------------------------------------------------------------------------------")
-        print(self.nuvarande_plats)
-        print(self.lista_filer)
-        print(self.check_os)
+        print("----------------------------------------------------------------------------------------------------------------------------------")
+        print("            Terminal Helper                                                                                                       ")
+        print(" options are b=back l=list or ->forward <-back home       q for quit ")
+        print("----------------------------------------------------------------------------------------------------------------------------------")
+        print(self.nuvarande_plats())
+        #print(self.lista_filer())
+        #print(self.check_os())
+        #print(self.whoami())
 
     
     def file_menu(self):
@@ -114,7 +148,7 @@ class Terminal_helper():
                 print("down key")
             if self.running == "\x1b[C":
                 print("right key")
-                self.foregaende_plats()
+                self.framat()
 
             if self.running == "\x1b[D":
                 print("left key")
@@ -179,7 +213,8 @@ th.main_menu()
 th.keyboard_input()
 #skapa_fil("/home/jonny/", "rumpa.txt")
 #th.ping_a_host("linux")
-th.show_date()
+#th.show_date()
 #th.list_services("init")
-th.check_os()
-
+#th.check_os()
+#th.nuvarande_plats()
+#th.framat()
