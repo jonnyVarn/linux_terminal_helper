@@ -2,7 +2,10 @@ import os
 import subprocess
 import sys
 from time import sleep
-from pathlib import Path
+#from pathlib import Path
+
+#from getpass import getpass
+#from getpass import getuser
 
 #subprocess.run([sys.executable, "-c", "ls -la"])
 #lines = output.split('\n')
@@ -17,10 +20,28 @@ class Terminal_helper():
         self.something=something
         self.something_else=something_else
     
-    #FILE SECTION            
+    #FILE SECTION
+
+    def nuvarande_plats(self):
+        #subprocess.run(["echo", "hej"])
+
+        #Popen(["/usr/bin/git", "commit", "-m", "Fixes a bug."]) 
+        subprocess.Popen(["usr/bin/pwd"]) 
+    
+    def foregaende_plats(self):
+        self.framat=subprocess.Popen(["/usr/bin/echo", "$OLDPWD"])
+        return framat 
+
+    def framat(self, framat):
+            
+
+    
+
+
+
     def change_owner(self,user, fil):
         subrocess.run(["chown", (user), (fil)])
-
+            
 
     def lista_filer(self):
         self.current_dir=os.listdir()
@@ -54,6 +75,7 @@ class Terminal_helper():
         print("            Terminal Helper                                                  ")
         print(" options are b=back l=list or q for quit          ")
         print("-------------------------------------------------------------------------------")
+        print(self.nuvarande_plats)
         print(self.lista_filer())
         print(self.check_os())
 
@@ -63,7 +85,8 @@ class Terminal_helper():
         print("            Terminal Helper FILE                                               ")
         print(" options are b=back l=list or q for quit                                       ")
         print("-------------------------------------------------------------------------------")
-        print(self.lista_filer())
+        print(self.current_dir())
+        #print(self.lista_filer())
     
     
     
