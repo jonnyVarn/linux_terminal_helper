@@ -22,27 +22,34 @@ class Terminal_helper():
         self.something_else=something_else
         self.path_dict={'':''}
         self.framat_str="/home/jonny"
-        self.counter=0
+        self.counter=counter=0
+        
+        
     
     #FILE SECTION
 
     def nuvarande_plats(self):
+        counter=self.counter
+        path_dict=self.path_dict
         #subprocess.run(["echo", "hej"])
-
         #Popen(["/usr/bin/git", "commit", "-m", "Fixes a bug."]) 
         #subprocess.Popen(["usr/bin/pwd"]) 
         #,universal_newlines=True för att få string??
         subprocess.call(['pwd'], shell=True)
-        nuvarande_plats_str=str(subprocess.check_output(['pwd'], shell=True))
-    
+        nuvarande_plats_str=str(subprocess.check_output(['pwd'], shell=True))    
         nuvarande_plats_str=nuvarande_plats_str.strip('b\'')
         nuvarande_plats_str=nuvarande_plats_str.strip('\\n')
         #self.nuvarande_plats_str=str(nuvarande_plats_str)
         print(type(nuvarande_plats_str))
         print(nuvarande_plats_str)
-        self.path_dict={self.counter:str(nuvarande_plats_str)}
+        if self.counter >0:
+            self.path_dict.update ({self.counter:nuvarande_plats_str})
         print(self.path_dict)
-        self.counter+=1
+        print(self.path_dict[0])
+        if self.counter== 0:
+            self.path_dict[(self.counter)]=(nuvarande_plats_str)
+            print(self.path_dict[self.counter])
+            self.counter+=1
         #nuvarande_plats_str=subprocess.check_output(['ls','-l','-a'])
         #print(self.nuvarande_plats_str)
         return nuvarande_plats_str
