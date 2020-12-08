@@ -26,17 +26,22 @@ class Terminal_helper():
         #subprocess.run(["echo", "hej"])
 
         #Popen(["/usr/bin/git", "commit", "-m", "Fixes a bug."]) 
-        subprocess.Popen(["usr/bin/pwd"]) 
-    
+        #subprocess.Popen(["usr/bin/pwd"]) 
+        subprocess.call(['pwd'], shell=True)
+        nuvarande_plats_str=subprocess.check_output(['ls','-l','-a'])
+        print(nuvarande_plats_str)
+        return nuvarande_plats_str
     def foregaende_plats(self):
         self.framat=subprocess.Popen(["/usr/bin/echo", "$OLDPWD"])
         return framat 
 
     def framat(self, framat):
-            
+        subprocess.call(["/usr/bin/echo", "$OLDPWD"], shell=True)
 
     
-
+    def home(self):
+        subprocess.call(["cd"], shell=True)
+        print(self.nuvarande_plats())
 
 
     def change_owner(self,user, fil):
@@ -76,8 +81,8 @@ class Terminal_helper():
         print(" options are b=back l=list or q for quit          ")
         print("-------------------------------------------------------------------------------")
         print(self.nuvarande_plats)
-        print(self.lista_filer())
-        print(self.check_os())
+        print(self.lista_filer)
+        print(self.check_os)
 
     
     def file_menu(self):
@@ -109,10 +114,18 @@ class Terminal_helper():
                 print("down key")
             if self.running == "\x1b[C":
                 print("right key")
+                self.foregaende_plats()
+
             if self.running == "\x1b[D":
                 print("left key")
                 self.flytta_bakat()
                 self.lista_filer()
+            if self.running=="\x1b[1~":
+                print("home key")
+                self.home()
+            
+            if self.running=="x1b[3~":
+                print("delete key")
 
     #SERVICES SECTION
     def show_date(self):
@@ -161,7 +174,7 @@ class Terminal_helper():
 
 
 th=Terminal_helper("11", "12")
-
+th.nuvarande_plats()
 th.main_menu()
 th.keyboard_input()
 #skapa_fil("/home/jonny/", "rumpa.txt")
