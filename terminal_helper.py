@@ -17,21 +17,23 @@ class Terminal_helper():
         self.path_dict={0:(self.pwd_str)}
         self.counter=counter=0
         self.cd=subprocess.call(["cd", ".."], shell=True)
-        #self.ls_file_array=glob.glob(self.pwd_str+"/*")
+    
     #FILE SECTION
+    #dir files and view them
     def file_reader(self):
         self.ls_file_array=glob.glob(self.pwd_str+"/*")
         counter=0
         for name in self.ls_file_array:
-            print(f'{counter}:{name}')
+            file_checker=self.ls_file_array[counter]
+            if os.path.isfile(str(file_checker)):
+                print(f'{counter}:{name}')
             counter +=1
-        file_number=int(input('choose'))
+        file_number=int(input('open file nr? or q for quit'))
         filename=self.ls_file_array[file_number]
         my_file = open(filename, 'r')
         contents=my_file.read()
         print(contents)
-        quit()
-
+    #should show current location
     def current_location(self):
         print(self.pwd_str)
         return self.pwd_str
@@ -46,7 +48,7 @@ class Terminal_helper():
         print(self.pwd_str)
         self.path_dict.update ({self.counter:self.pwd_str})
 
-
+        #should move out from home and towards filesystem root
     def move_out(self):
         self.move_out_str=os.chdir("..")
         #self.move_out_str=subprocess.call(["cd ",".."], shell=True)
@@ -90,9 +92,10 @@ class Terminal_helper():
         
     
     def main_menu(self):
+        #subprocess.call(["clear"])
         print("-------------------------------------------------------------------------------------------------------------------------------------")
-        print("Terminal Helper                                                                                                       ")
-        print(" options are "<" ">"       q for quit ")
+        print("Terminal Helper  " +self.pwd_str +"                                                                                                       ")
+        print(" options are < =cd  >=fw  l=list o=open q for quit ")
         print("-------------------------------------------------------------------------------------------------------------------------------------")
         #print(self.current_location())
         #print(self.lista_filer())
@@ -101,6 +104,7 @@ class Terminal_helper():
 
     
     def file_menu(self):
+        
         print("-------------------------------------------------------------------------------")
         print("            Terminal Helper FILE                                               ")
         print(" options are b=back l=list or q for quit                                       ")
@@ -114,7 +118,6 @@ class Terminal_helper():
         self.running=""
         while self.running !="q":
             self.main_menu()
-            print(self.path_dict)
             self.running=input()
             if self.running=="l":
                 self.list_files()
@@ -124,14 +127,12 @@ class Terminal_helper():
             if self.running=="f":
                 self.file_menu()
             if self.running == "\x1b[C":
-                print("right key")
                 print(self.path_dict[self.counter])
                 if self.counter>0:
                     self.move_forward()
                     self.list_files()
                 continue
             if self.running == "\x1b[D":
-                print("left key")
                 self.move_out()
                 self.list_files()
                 continue
@@ -141,7 +142,7 @@ class Terminal_helper():
                 continue
             #if self.running=="x1b[3~":
                 #print("delete key")
-            if self.running=="open":
+            if self.running=="open" or self.running=="o":
                 self.file_reader()
                 continue
     
@@ -156,10 +157,10 @@ class Terminal_helper():
         group=input("vilken vilka grupper")
         
     def ping_a_host(self, os_type):
-        if os_type=="win":
+        if os.name=="win":
             result = subprocess.run(['powershell.exe', mellan_lagring ], stdout=subprocess.PIPE)
-        if os_type=="linux":
-            subprocess.run(["ping", "127.0.0.1"])
+        if os.name=="linux":
+            subprocess.run(["ping", " 127.0.0.1"])
     def list_services(self, env):
         self.env=env
         if self.env=="init":
@@ -192,12 +193,4 @@ class Terminal_helper():
 
 
 th=Terminal_helper("11", "12")
-print(th.path_dict[0])
 th.keyboard_input()
-#skapa_fil("/home/jonny/", "rumpa.txt")
-#th.ping_a_host("linux")
-#th.show_date()
-#th.list_services("init")
-#th.check_os()
-#th.current_location()
-#th.move_forward()
