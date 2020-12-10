@@ -41,9 +41,12 @@ class Terminal_helper():
         file_number=int(input('open file nr? or q for quit'))
         filename=self.ls_file_array[file_number]
         if os.path.isfile(filename):
-            my_file = open(filename, 'r')
-            contents=my_file.read()
-            print(contents)
+            try:
+                my_file = open(filename, 'r')
+                contents=my_file.read()
+                print(contents)
+            except:
+                print("no go")
         else: 
             os.chdir(filename)
             self.pwd=spc(["pwd"])
@@ -115,22 +118,29 @@ class Terminal_helper():
         if os.path.isfile(filename):
             no_regrett=input("do you wish to delete" +(filename) +"answer yes or no")
             if no_regrett=="yes":
-                os.remove(filename)
-                self.list_files()
+                try:
+                    os.remove(filename)
+                    self.list_files()
+                except:
+                    print("no go")
+                    
             else:
                 self.list_files()
         if os.path.isdir(filename):
-            rmtree(filename)
-            #os.removedirs(filename)
-            self.list_files()
-            #still deleting but a dir
+            try:
+                rmtree(filename)
+                self.list_files()
+            except:
+                print("no go")
             
      
     def create_file(self,file_path, file_name):
         self.file_name=file_name
         self.file_path=file_path
-        self.file_name=open((file_path+"/"+file_name), 'w+')
-
+        try:
+            self.file_name=open((file_path+"/"+file_name), 'w+')
+        except:
+            print("no go")
 
     def whoami(self):
         subprocess.call(["whoami"], shell=True)
@@ -155,12 +165,14 @@ class Terminal_helper():
             self.main_menu()
             self.running=input()
             if self.running=="l":
+                spc('clear')
+                self.main_menu()
                 self.list_files()
                 continue
             if self.running=="q":
                 break
             if self.running == "\x1b[C":
-                self.clear_screen()
+                spc('clear')
                 self.main_menu()
                 print(self.path_dict[self.counter])
                 if self.counter>0:
@@ -168,28 +180,27 @@ class Terminal_helper():
                     self.list_files()
                 continue
             if self.running == "\x1b[D":
-                self.clear_screen
+                spc('clear')
                 self.main_menu()
                 self.move_out()
                 self.list_files()
                 continue
             if self.running=="^[[H":
-                #print("home key")
                 self.home()
                 continue
             #if self.running=="x1b[3~":
                 #print("delete key")
             if self.running=="open" or self.running=="o" or self.running=="\x1b[A" or self.running=="^[[A" :
-                sp.call('clear', shell=True)
+                spc('clear', shell=True)
                 self.main_menu()
                 self.file_reader()
                 continue
             if self.running=="d":
-                self.clear_screen()
+                spc('clear', shell=True)
                 self.main_menu()
                 self.remove_file() 
             if self.running=="c":
-                sp.call('clear', shell=True)
+                spc('clear', shell=True)
                 self.create_file(self.pwd_str, (input("filename")))
                 continue
     #SERVICES SECTION
