@@ -8,6 +8,7 @@ import sys
 from time import sleep
 import glob
 import shutil
+from shutil import rmtree as rmtree
 
 class Terminal_helper():
     
@@ -119,17 +120,16 @@ class Terminal_helper():
             else:
                 self.list_files()
         if os.path.isdir(filename):
-            shutil.rmtree(filename)
+            rmtree(filename)
             #os.removedirs(filename)
             self.list_files()
             #still deleting but a dir
             
      
-    def skapa_fil(self, plats, namn):
-        plats=plats
-        namn=namn
-        #Path(plats+ namn).touch()
-        subprocess.run(["touch", (plats), (namn)])
+    def create_file(self,file_path, file_name):
+        self.file_name=file_name
+        self.file_path=file_path
+        self.file_name=open((file_path+"/"+file_name), 'w+')
 
 
     def whoami(self):
@@ -188,7 +188,10 @@ class Terminal_helper():
                 self.clear_screen()
                 self.main_menu()
                 self.remove_file() 
-    
+            if self.running=="c":
+                sp.call('clear', shell=True)
+                self.create_file(self.pwd_str, (input("filename")))
+                continue
     #SERVICES SECTION
     def show_date(self):
         subprocess.run(["date"])
