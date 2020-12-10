@@ -20,8 +20,7 @@ class Terminal_helper():
    
     
     def cls(self):
-        cls=subprocess.call(["clear"])
-
+        print("\n"*100)
     #FILE SECTION
     #dir files and view them
     def file_reader(self):
@@ -32,9 +31,7 @@ class Terminal_helper():
             if os.path.isfile(str(file_checker)):
                 print(f'{counter}:{name}')
             if os.path.isdir(str(file_checker)):
-                print("------------dir------------------")
-                print(f'{counter}:{name}')
-                print("---------------------------------")
+                print(f'{counter}:{name}'+ "(dir)")
             counter +=1
         file_number=int(input('open file nr? or q for quit'))
         filename=self.ls_file_array[file_number]
@@ -57,7 +54,6 @@ class Terminal_helper():
         
         #should bring you to previous dir
     def move_forward(self):
-        
         if self.counter>0:
             self.counter -=1
             path=self.path_dict.get(self.counter)
@@ -98,10 +94,33 @@ class Terminal_helper():
         print(self.current_dir)
         return self.current_dir
 
-    def ta_bort_fil(self):
-        fil_att_ta_bort=input("vilken fil vill du ta bort")
-        os.remove(fil_att_ta_bort)
+    def remove_file(self):
+       
+        self.ls_file_array=glob.glob(self.pwd_str+"/*")
+        counter=0
+        for name in self.ls_file_array:
+            file_checker=self.ls_file_array[counter]
+            if os.path.isfile(str(file_checker)):
+                print(f'{counter}:{name}')
+            if os.path.isdir(str(file_checker)):
+                print(f'{counter}:{name}'+ "(dir)")
+            counter +=1
+        file_number=int(input('remove file nr? or q for quit'))
+        filename=self.ls_file_array[file_number]
+        if os.path.isfile(filename):
+            no_regrett=input("do you wish to delete" +(filename) +"answer yes or no")
+            if no_regrett=="yes":
+                os.remove(filename)
+                self.list_files()
 
+            else:
+                self.list_files()
+        if os.path.isdir(filename):
+            os.removedirs(filename)
+            self.list_files()
+            #still deleting but a dir
+            
+     
     def skapa_fil(self, plats, namn):
         plats=plats
         namn=namn
@@ -118,7 +137,7 @@ class Terminal_helper():
         #subprocess.call(["clear"])
         print("-------------------------------------------------------------------------------------------------------------------------------------")
         print("Terminal Helper  " +self.pwd_str + "     "+ (str(self.show_date()))+"                                                                                                       ")
-        print(" options are < =cd..  >=fw  l=list o=open q for quit ")
+        print(" options are < =cd..  >=fw  l=list o=open  c=create file d=delete  q for quit ")
         print("-------------------------------------------------------------------------------------------------------------------------------------")
         #print(self.current_location())
         #print(self.lista_filer())
@@ -167,9 +186,11 @@ class Terminal_helper():
                 continue
             #if self.running=="x1b[3~":
                 #print("delete key")
-            if self.running=="open" or self.running=="o":
+            if self.running=="open" or self.running=="o" or self.running=="\x1b[A" or self.running=="^[[A" :
                 self.file_reader()
                 continue
+            if self.running=="d":
+               self.remove_file() 
     
     #SERVICES SECTION
     def show_date(self):
