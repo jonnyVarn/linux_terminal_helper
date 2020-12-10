@@ -17,7 +17,12 @@ class Terminal_helper():
         self.path_dict={0:(self.pwd_str)}
         self.counter=counter=0
         self.cd=subprocess.call(["cd", ".."], shell=True)
+        self.cls=subprocess.call(["clear"])
+   
     
+    def cls(self):
+        cls=subprocess.call(["clear"])
+
     #FILE SECTION
     #dir files and view them
     def file_reader(self):
@@ -40,16 +45,22 @@ class Terminal_helper():
         
         #should bring you to previous dir
     def move_forward(self):
+        self.cls
         if self.counter>0:
             self.counter -=1
             path=self.path_dict.get(self.counter)
             move_forward=os.chdir(str(path))
+            pwd_str=str(subprocess.check_output(["pwd"], shell=True, )).strip('\'' '\\b' '\\n' '\'' )
+            self.pwd_str=pwd_str
+
         #move_forward=subprocess.call(["cd "], shell=True)
         print(self.pwd_str)
         self.path_dict.update ({self.counter:self.pwd_str})
 
+
         #should move out from home and towards filesystem root
     def move_out(self):
+        self.cls
         self.move_out_str=os.chdir("..")
         #self.move_out_str=subprocess.call(["cd ",".."], shell=True)
         #self.cd
@@ -94,8 +105,8 @@ class Terminal_helper():
     def main_menu(self):
         #subprocess.call(["clear"])
         print("-------------------------------------------------------------------------------------------------------------------------------------")
-        print("Terminal Helper  " +self.pwd_str +"                                                                                                       ")
-        print(" options are < =cd  >=fw  l=list o=open q for quit ")
+        print("Terminal Helper  " +self.pwd_str + "     "+ (str(self.show_date()))+"                                                                                                       ")
+        print(" options are < =cd..  >=fw  l=list o=open q for quit ")
         print("-------------------------------------------------------------------------------------------------------------------------------------")
         #print(self.current_location())
         #print(self.lista_filer())
@@ -191,6 +202,6 @@ class Terminal_helper():
 
 
 
-
+subprocess.call(["clear"])
 th=Terminal_helper("11", "12")
 th.keyboard_input()
