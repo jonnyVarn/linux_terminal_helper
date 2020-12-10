@@ -7,9 +7,8 @@ import glob
 
 class Terminal_helper():
     
-    def __init__(self, something, something_else):
-        self.something=something
-        self.something_else=something_else
+    def __init__(self, meaning_of_life):
+        self.meaning_of_life=meaning_of_life
         self.pwd=subprocess.call(["pwd"])
         pwd_str=str(subprocess.check_output(["pwd"], shell=True, )).strip('\'' '\\b' '\\n' '\'' )
         self.pwd_str=pwd_str
@@ -45,7 +44,12 @@ class Terminal_helper():
             print(contents)
         else: 
             os.chdir(filename)
-            
+            self.pwd=subprocess.call(["pwd"])
+            pwd_str=str(subprocess.check_output(["pwd"], shell=True, )).strip('\'' '\\b' '\\n' '\'' )
+            self.pwd_str=pwd_str
+            self.counter+=1
+            self.path_dict.update({self.counter:(self.pwd_str)})
+       
     #should show current location
     def current_location(self):
         print(self.pwd_str)
@@ -135,6 +139,8 @@ class Terminal_helper():
     
     def keyboard_input(self):
         self.running=""
+        if int(self.meaning_of_life)!=42:
+            quit()
         while self.running !="q":
             self.main_menu()
             self.running=input()
@@ -211,5 +217,5 @@ class Terminal_helper():
 
 
 subprocess.call(["clear"])
-th=Terminal_helper("11", "12")
+th=Terminal_helper("42")
 th.keyboard_input()
