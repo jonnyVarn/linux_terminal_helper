@@ -1,26 +1,30 @@
 #!/usr/bin/python3
 import os
 import subprocess
+import subprocess as sp
+from subprocess import call as spc
+from subprocess import check_output as check_output
 import sys
 from time import sleep
 import glob
+import shutil
 
 class Terminal_helper():
     
     def __init__(self, meaning_of_life):
         self.meaning_of_life=meaning_of_life
         self.pwd=subprocess.call(["pwd"])
-        pwd_str=str(subprocess.check_output(["pwd"], shell=True, )).strip('\'' '\\b' '\\n' '\'' )
+        pwd_str=str(check_output(["pwd"], shell=True, )).strip('\'' '\\b' '\\n' '\'' )
         self.pwd_str=pwd_str
         self.home_str=pwd_str
         self.path_dict={0:(self.pwd_str)}
         self.counter=counter=0
         self.cd=subprocess.call(["cd", ".."], shell=True)
         self.cls=subprocess.call(["clear"])
-   
     
-    def cls(self):
-        print("\n"*100)
+    def clear_screen(self):
+        spc('clear', shell=True)
+        
     #FILE SECTION
     #dir files and view them
     def file_reader(self):
@@ -41,8 +45,8 @@ class Terminal_helper():
             print(contents)
         else: 
             os.chdir(filename)
-            self.pwd=subprocess.call(["pwd"])
-            pwd_str=str(subprocess.check_output(["pwd"], shell=True, )).strip('\'' '\\b' '\\n' '\'' )
+            self.pwd=spc(["pwd"])
+            pwd_str=str(check_output(["pwd"], shell=True, )).strip('\'' '\\b' '\\n' '\'' )
             self.pwd_str=pwd_str
             self.counter+=1
             self.path_dict.update({self.counter:(self.pwd_str)})
@@ -58,7 +62,7 @@ class Terminal_helper():
             self.counter -=1
             path=self.path_dict.get(self.counter)
             move_forward=os.chdir(str(path))
-            pwd_str=str(subprocess.check_output(["pwd"], shell=True, )).strip('\'' '\\b' '\\n' '\'' )
+            pwd_str=str(check_output(["pwd"], shell=True, )).strip('\'' '\\b' '\\n' '\'' )
             self.pwd_str=pwd_str
 
         #move_forward=subprocess.call(["cd "], shell=True)
@@ -73,8 +77,8 @@ class Terminal_helper():
         #self.move_out_str=subprocess.call(["cd ",".."], shell=True)
         #self.cd
         self.counter +=1
-        self.pwd=subprocess.call(["pwd"])
-        pwd_str=str(subprocess.check_output(["pwd"], shell=True, )).strip('\'' '\\b' '\\n' '\'' )
+        self.pwd=spc(["pwd"])
+        pwd_str=str(check_output(["pwd"], shell=True, )).strip('\'' '\\b' '\\n' '\'' )
         self.pwd_str=pwd_str
         self.path_dict.update({self.counter:(self.pwd_str)})
 
@@ -112,11 +116,11 @@ class Terminal_helper():
             if no_regrett=="yes":
                 os.remove(filename)
                 self.list_files()
-
             else:
                 self.list_files()
         if os.path.isdir(filename):
-            os.removedirs(filename)
+            shutil.rmtree(filename)
+            #os.removedirs(filename)
             self.list_files()
             #still deleting but a dir
             
@@ -139,20 +143,7 @@ class Terminal_helper():
         print("Terminal Helper  " +self.pwd_str + "     "+ (str(self.show_date()))+"                                                                                                       ")
         print(" options are < =cd..  >=fw  l=list o=open  c=create file d=delete  q for quit ")
         print("-------------------------------------------------------------------------------------------------------------------------------------")
-        #print(self.current_location())
-        #print(self.lista_filer())
-        #print(self.check_os())
-        #print(self.whoami())
-
     
-    def file_menu(self):
-        
-        print("-------------------------------------------------------------------------------")
-        print("            Terminal Helper FILE                                               ")
-        print(" options are b=back l=list or q for quit                                       ")
-        print("-------------------------------------------------------------------------------")
-        #print(self.current_dir())
-        #print(self.lista_filer())
     
     
     
@@ -168,15 +159,17 @@ class Terminal_helper():
                 continue
             if self.running=="q":
                 break
-            if self.running=="f":
-                self.file_menu()
             if self.running == "\x1b[C":
+                self.clear_screen()
+                self.main_menu()
                 print(self.path_dict[self.counter])
                 if self.counter>0:
                     self.move_forward()
                     self.list_files()
                 continue
             if self.running == "\x1b[D":
+                self.clear_screen
+                self.main_menu()
                 self.move_out()
                 self.list_files()
                 continue
@@ -187,10 +180,14 @@ class Terminal_helper():
             #if self.running=="x1b[3~":
                 #print("delete key")
             if self.running=="open" or self.running=="o" or self.running=="\x1b[A" or self.running=="^[[A" :
+                sp.call('clear', shell=True)
+                self.main_menu()
                 self.file_reader()
                 continue
             if self.running=="d":
-               self.remove_file() 
+                self.clear_screen()
+                self.main_menu()
+                self.remove_file() 
     
     #SERVICES SECTION
     def show_date(self):
@@ -237,6 +234,6 @@ class Terminal_helper():
 
 
 
-subprocess.call(["clear"])
+sp.call(["clear"])
 th=Terminal_helper("42")
 th.keyboard_input()
