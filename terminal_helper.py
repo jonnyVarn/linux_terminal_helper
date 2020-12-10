@@ -32,12 +32,20 @@ class Terminal_helper():
             file_checker=self.ls_file_array[counter]
             if os.path.isfile(str(file_checker)):
                 print(f'{counter}:{name}')
+            if os.path.isdir(str(file_checker)):
+                print("------------dir------------------")
+                print(f'{counter}:{name}')
+                print("---------------------------------")
             counter +=1
         file_number=int(input('open file nr? or q for quit'))
         filename=self.ls_file_array[file_number]
-        my_file = open(filename, 'r')
-        contents=my_file.read()
-        print(contents)
+        if os.path.isfile(filename):
+            my_file = open(filename, 'r')
+            contents=my_file.read()
+            print(contents)
+        else: 
+            os.chdir(filename)
+            
     #should show current location
     def current_location(self):
         print(self.pwd_str)
@@ -45,7 +53,7 @@ class Terminal_helper():
         
         #should bring you to previous dir
     def move_forward(self):
-        self.cls
+        
         if self.counter>0:
             self.counter -=1
             path=self.path_dict.get(self.counter)
