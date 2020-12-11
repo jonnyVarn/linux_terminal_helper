@@ -12,6 +12,7 @@ from shutil import rmtree as rmtree
 
 class Terminal_helper():
     
+
     def __init__(self, meaning_of_life):
         self.meaning_of_life=meaning_of_life
         self.pwd=subprocess.call(["pwd"])
@@ -22,7 +23,13 @@ class Terminal_helper():
         self.counter=counter=0
         self.cd=subprocess.call(["cd", ".."], shell=True)
         self.cls=subprocess.call(["clear"])
+        self.print_on_the_menu="test"
+        self.print_on_the_menu2="test"
+        self.print_on_the_menu3="test"
     
+    def th_help(self):
+        print("as the names states this is a terminal helper for linux you could print stuff and delete stuff.")
+
     def clear_screen(self):
         spc('clear', shell=True)
         
@@ -85,12 +92,24 @@ class Terminal_helper():
         pwd_str=str(check_output(["pwd"], shell=True, )).strip('\'' '\\b' '\\n' '\'' )
         self.pwd_str=pwd_str
         self.path_dict.update({self.counter:(self.pwd_str)})
+        #should move you to file root /
+    def move_out_fast(self):
+        self.cls
+        self.move_out_str=os.chdir("/")
+        #self.move_out_str=subprocess.call(["cd ",".."], shell=True)
+        #self.cd
+        self.counter +=1
+        self.pwd=spc(["pwd"])
+        pwd_str=str(check_output(["pwd"], shell=True, )).strip('\'' '\\b' '\\n' '\'' )
+        self.pwd_str=pwd_str
+        self.path_dict.update({self.counter:(self.pwd_str)})
+        
 
         #brings you back to startdir 
     def home(self):
         os.chdir(self.home_str)
-        print(self.current_location_str)
         self.counter=0
+        self.pwd_str=self.home_str
 
 
     def change_owner(self,user, fil):
@@ -147,11 +166,12 @@ class Terminal_helper():
 
         
     
-    def main_menu(self):
-        #subprocess.call(["clear"])
+    def main_menu(self, print_on_the_menu):
+        self.print_on_the_menu=print_on_the_menu 
+        
         print("-------------------------------------------------------------------------------------------------------------------------------------")
-        print("Terminal Helper  " +self.pwd_str + "     "+ (str(self.show_date()))+"                                                                                                       ")
-        print(" options are < =cd..  >=fw  l=list o=open  c=create file d=delete  q for quit ")
+        print("Terminal Helper  " +self.pwd_str + "     "+ (str(self.show_date()))+"  ")
+        print(" options are < =cd..  >=fw  l=list o=open  c=create file d=delete  q for quit   "+ (print_on_the_menu)) 
         print("-------------------------------------------------------------------------------------------------------------------------------------")
     
     
@@ -159,21 +179,22 @@ class Terminal_helper():
     
     def keyboard_input(self):
         self.running=""
+        spc('clear')
         if int(self.meaning_of_life)!=42:
             quit()
         while self.running !="q":
-            self.main_menu()
+            self.main_menu(self.print_on_the_menu)
             self.running=input()
             if self.running=="l":
                 spc('clear')
-                self.main_menu()
+                self.main_menu("")
                 self.list_files()
                 continue
             if self.running=="q":
                 break
             if self.running == "\x1b[C":
                 spc('clear')
-                self.main_menu()
+                self.main_menu("")
                 print(self.path_dict[self.counter])
                 if self.counter>0:
                     self.move_forward()
@@ -181,28 +202,46 @@ class Terminal_helper():
                 continue
             if self.running == "\x1b[D":
                 spc('clear')
-                self.main_menu()
+                self.main_menu("cd .. if you want more action press twice for cd /")
                 self.move_out()
                 self.list_files()
                 continue
             if self.running=="^[[H":
                 self.home()
                 continue
+
+            if self.running == "\x1b[D\x1b[D":
+                spc('clear')
+                self.main_menu("cd / wow that was fast")
+                self.move_out_fast()
+                self.list_files()
+                continue
+
             #if self.running=="x1b[3~":
                 #print("delete key")
             if self.running=="open" or self.running=="o" or self.running=="\x1b[A" or self.running=="^[[A" :
                 spc('clear', shell=True)
-                self.main_menu()
+                self.main_menu(self.print_on_the_menu)
                 self.file_reader()
                 continue
             if self.running=="d":
                 spc('clear', shell=True)
-                self.main_menu()
+                self.main_menu("")
                 self.remove_file() 
             if self.running=="c":
                 spc('clear', shell=True)
                 self.create_file(self.pwd_str, (input("filename")))
                 continue
+            if self.running=="\x1b[C\x1b[C":
+                self.print_on_the_menu=("not so fast ok ok bringing you home")
+                self.home()
+                continue
+            if self.running=="h" or self.running=="-h" or self.running=="help":
+                self.th_help()
+                continue
+            else:
+                self.print_on_the_menu=("This is a bit complicated.. try again. For cd .. press left arrow key")
+                spc('clear')
     #SERVICES SECTION
     def show_date(self):
         subprocess.run(["date"])
@@ -240,14 +279,16 @@ class Terminal_helper():
     def add_repositories(self):
         pass
     def check_os(self):
+        if os_type=="win":
+            pwd_cmd=="echo %cd%"
         self.os_typ=subprocess.run(["uname", "-o"],stdout=subprocess.PIPE)
         os_typ=self.os_typ
-        #print(os_typ)
+        print(os_typ)
         return os_typ
 
 
 
 
-sp.call(["clear"])
+spc(["clear"])
 th=Terminal_helper("42")
 th.keyboard_input()
