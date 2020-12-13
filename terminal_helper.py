@@ -35,8 +35,9 @@ class Terminal_helper():
         self.print_on_the_menu2="test"
         self.print_on_the_menu3="test"
         self.menu_needed=False
+        self.linux_init=""
     
-    #path not working if you change in bash
+    #just starting bash from the program 
     def bash(self):
         spc(["bash"], shell=True)
         print(getcwd())
@@ -175,9 +176,14 @@ class Terminal_helper():
         self.counter=0
         self.pwd_str=self.home_str
 
-
-    def change_owner(self,user, fil):
-        subrocess.run(["chown", (user), (fil)])
+    def change_owner(self):
+        fil=input("filename")
+        fil=self.pwd_str + "/" + fil
+        user=os.geteuid()
+        group=os.getegid()
+        #user=input("username")
+        print(str(user) + "  " + fil+str(group))
+        os.chown(fil,user,group)
             
 
     def list_files(self):
@@ -230,6 +236,74 @@ class Terminal_helper():
 
     def whoami(self):
         subprocess.call(["whoami"], shell=True)
+    #SERVICES SECTION
+    def show_date(self):
+        subprocess.run(["date"])
+
+    def create_user(self):
+        os.seteuid
+        username=input("ange username")
+        pass
+    def add_user_to_group(self):
+        group=input("vilken vilka grupper")
+        
+        #rather useless right now but you can ping a host
+    def ping_a_host(self):
+        #if os.name=="win":
+            #result = subprocess.run(['powershell.exe', mellan_lagring ], stdout=subprocess.PIPE)
+        #if os.name=="linux":
+        host_name=input("enter host to ping")
+        host_name="ping" + " " + host_name + " -c 3" 
+        subprocess.run([host_name], shell=True)
+        check_output([host_name], shell=True)
+    def list_services(self):
+        #spc("ps --no-headers")
+        #test=check_output("ps --no-headers -o")
+        #print(test)
+
+        #spc("ps ", "--no" ,"-headers" ," -o" ," comm 1")
+        #init_or_systemd=check_output("ps ", "--no", "-headers", " -o", "comm 1", shell=True)
+        #print(init_or_systemd)
+        #if init_or_systemd=="init":
+        try:
+            subprocess.run(["service --status-all"], shell=True)
+            services=check_output(["service --status-all"],shell=True)
+            print(services)
+        except:
+            print("you are not running init")
+            self.linux_init=False 
+        try:    
+            spc(["systemctl --list-units"])
+            services2=check_output(["systemctl --list-units"])
+            print(services2)
+        except:
+            print("running init")
+            self.linux_init=True
+        
+        
+    def change_rights(self, mode, filename):
+        subprocess.run(["chmod", (mode), (filename)])
+    
+    def change_date(self, date,time):
+        pass
+    def open_ports(self):
+        pass
+    def search_for_program(self):
+        pass
+    def install_program(self):
+        pass
+    def remove_repositories(self):
+        pass
+    def add_repositories(self):
+        pass
+    def check_os(self):
+        if os_type=="win":
+            pwd_cmd=="echo %cd%"
+        self.os_typ=subprocess.run(["uname", "-o"],stdout=subprocess.PIPE)
+        os_typ=self.os_typ
+        print(os_typ)
+        return os_typ
+
 
         
     
@@ -292,6 +366,8 @@ class Terminal_helper():
                 self.move_out_fast()
                 self.list_files()
                 continue
+               
+                          
 
             #if self.running=="x1b[3~":
                 #print("delete key")
@@ -322,57 +398,17 @@ class Terminal_helper():
                 self.bash()
             if self.running=="notepad":
                 self.write_note()
-                
+            if self.running=="ping":
+                self.ping_a_host()
+            if self.running=="service":
+                self.list_services()
             else:
                 self.print_on_the_menu=("This is a bit complicated.. try again. For cd .. press left arrow key")
                 spc('clear')
-    #SERVICES SECTION
-    def show_date(self):
-        subprocess.run(["date"])
-
-    def create_user(self):
-        username=input("ange username")
-        pass
-    def add_user_to_group(self):
-        group=input("vilken vilka grupper")
-        
-    def ping_a_host(self, os_type):
-        if os.name=="win":
-            result = subprocess.run(['powershell.exe', mellan_lagring ], stdout=subprocess.PIPE)
-        if os.name=="linux":
-            subprocess.run(["ping", " 127.0.0.1"])
-    def list_services(self, env):
-        self.env=env
-        if self.env=="init":
-            subprocess.run(["service", "--status-all"])
-        if self.env=="systemd":
-            subprocess.run(["systemctl --list-units"])
-    def change_rights(self, mode, filename):
-        subprocess.run(["chmod", (mode), (filename)])
     
-    def change_date(self, date,time):
-        pass
-    def open_ports(self):
-        pass
-    def search_for_program(self):
-        pass
-    def install_program(self):
-        pass
-    def remove_repositories(self):
-        pass
-    def add_repositories(self):
-        pass
-    def check_os(self):
-        if os_type=="win":
-            pwd_cmd=="echo %cd%"
-        self.os_typ=subprocess.run(["uname", "-o"],stdout=subprocess.PIPE)
-        os_typ=self.os_typ
-        print(os_typ)
-        return os_typ
-
-
 
 
 spc(["clear"])
 th=Terminal_helper("42")
+#th.change_owner()
 th.keyboard_input()
