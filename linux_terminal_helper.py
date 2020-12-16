@@ -16,7 +16,7 @@ from os import getcwd as getcwd
 from os.path import isfile
 from os.path import isdir
 
-class Terminal_helper():
+class TerminalHelper():
 
     def __init__(self, meaning_of_life):
         self.meaning_of_life = meaning_of_life
@@ -344,7 +344,7 @@ class Terminal_helper():
                     self.move_forward()
                     self.list_files()
                 continue
-            if self.running == "\x1b[D":
+            if self.running == "\x1b[D" or self.running == "<":
                 spc('clear')
                 self.main_menu("cd .. if you want more action press twice for cd /")
                 self.move_out()
@@ -356,7 +356,7 @@ class Terminal_helper():
                 self.home()
                 continue
 
-            if self.running == "\x1b[D\x1b[D":
+            if self.running == "\x1b[D\x1b[D" or self.running == "<<":
                 spc('clear')
                 self.main_menu("cd / wow that was fast")
                 self.move_out_fast()
@@ -390,7 +390,7 @@ class Terminal_helper():
                 self.main_menu("exiting c")
                 continue
                 continue
-            if self.running == "\x1b[C\x1b[C":
+            if self.running == "\x1b[C\x1b[C" or self.running==">>":
                 self.print_on_the_menu = ("not so fast ok ok bringing you home")
                 self.home()
                 spc('clear')
@@ -418,7 +418,7 @@ class Terminal_helper():
 
 
 spc(["clear"])
-th = Terminal_helper("42")
+th = TerminalHelper("42")
 # th.change_owner()
 th.keyboard_input()
 
@@ -440,7 +440,7 @@ RHEL och Centos är i princip samma Os förutom enterprise supporten och de anv�
 En lite mer krånglig variant är rpm RedhatPacketManager där man själv får hålla ordning på vilka dependencies som behövs.
 
 Debian, ubuntu, ubuntu mate etc använder sig av pakethanteraren apt. Eller den lite krångligare varianten där man får använda sig av dependencies själv dpkg
-
+i
 Av de som står själva förtjänar Alpine linux att nämnas ett minimalt komplett Linux/GNU som från början var avsett att användas på accesspunkter och mindre inbyggda enheter.
 
 
